@@ -198,7 +198,7 @@
   }
   function shareText() {
     const { label, top } = lastResult, u = appUrl();
-    return `Fiz o teste Prancheta 12: meu perfil tático é "${label}" ⚽\n` +
+    return `Fiz o Perfil de Campo e meu estilo de técnico é "${label}" ⚽\n` +
       `Mais compatível com: ${top.slice(0, 3).map((m) => `${m.c.n} (${m.p}%)`).join(", ")}.\n` +
       `Qual técnico pensa como você? 🧠` + (u ? `\nFaça o teste: ${u}` : "");
   }
@@ -230,7 +230,7 @@
     g.fillStyle = bg; g.fillRect(0, 0, W, H);
     for (let x = 0; x < W; x += 120) { g.fillStyle = "rgba(61,220,132,.04)"; g.fillRect(x, 0, 60, H); }
 
-    g.textAlign = "left"; g.fillStyle = "#3ddc84"; g.font = `700 26px ${FONT}`; g.fillText("📋  PRANCHETA 12", 60, 78);
+    g.textAlign = "left"; g.fillStyle = "#3ddc84"; g.font = `700 26px ${FONT}`; g.fillText("⚽  PERFIL DE CAMPO", 60, 78);
     g.textAlign = "right"; g.fillStyle = "#93ab9e"; g.font = `500 24px ${FONT}`; g.fillText("Qual técnico pensa como você?", W - 60, 78); g.textAlign = "left";
     g.fillStyle = "#93ab9e"; g.font = `600 24px ${FONT}`; g.fillText("MEU PERFIL TÁTICO", 60, 150);
     g.fillStyle = "#eaf3ee"; fit(g, label, 800, 82, W - 120); g.fillText(label, 60, 230);
@@ -376,7 +376,7 @@
     try { navigator.clipboard && navigator.clipboard.writeText(text).catch(() => {}); } catch (e) {}
     try {
       const file = new File([cardBlob], "meu-perfil-tecnico.png", { type: "image/png" });
-      await navigator.share({ files: [file], text, title: "Prancheta 12" });
+      await navigator.share({ files: [file], text, title: "Perfil de Campo" });
       mtoast("Se o app não trouxer o texto, ele já está copiado: é só colar.");
     } catch (e) {
       if (e && e.name === "AbortError") return;
