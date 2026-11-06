@@ -212,10 +212,6 @@
     const t = $("toast"); t.textContent = msg; t.hidden = false;
     setTimeout(() => (t.hidden = true), 2500);
   }
-  $("copy").onclick = async () => {
-    try { await navigator.clipboard.writeText(shareText()); toast("Texto copiado!"); }
-    catch (e) { toast("Não foi possível copiar automaticamente."); }
-  };
   $("redo").onclick = () => { store.clear(); show("intro"); $("resume").hidden = true; };
 
   // ---- card compartilhável ----
