@@ -104,6 +104,10 @@ Contribuições são bem-vindas: sugestões de técnicos, ajuste de perfis, nova
 - As fotos dos técnicos vêm do [Wikimedia Commons](https://commons.wikimedia.org/) e estão sob licenças livres (CC BY, CC BY-SA, CC0 ou domínio público). Várias exigem atribuição ao autor, conforme a página de cada arquivo no Commons.
 - Projeto de diversão, sem vínculo com os técnicos citados.
 
+## Licença
+
+O código é distribuído sob a licença [MIT](LICENSE). As fotos dos técnicos mantêm as licenças originais do Wikimedia Commons (veja "Créditos e avisos").
+
 ## Autor
 
 Feito por [jsambrano20](https://github.com/jsambrano20) · [github.com/jsambrano20/desc-tecnicos](https://github.com/jsambrano20/desc-tecnicos)
