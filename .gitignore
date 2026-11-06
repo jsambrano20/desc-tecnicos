@@ -1,0 +1,7 @@
+# originais pesados e arquivos de trabalho (não precisam ir para o deploy)
+fotos/originais/
+fotos/*
+!fotos/LEIAME.txt
+!fotos/[a-z]*.jpg
+.~lock.*
+*.avif

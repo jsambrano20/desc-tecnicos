@@ -1,0 +1,3 @@
+Coloque aqui as fotos dos tecnicos (opcional). Nome do arquivo: nome em minusculas, sem acento, com hifen, extensao .jpg
+Exemplos: pep-guardiola.jpg, tele-santana.jpg, marcelo-bielsa.jpg
+Se nao houver foto, o app usa um avatar ilustrado. Use apenas imagens que voce tenha direito de usar.

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prancheta 12 — Qual técnico pensa como você?</title>
+<meta name="description" content="Teste gratuito que mapeia sua filosofia de jogo em 12 fundamentos táticos e descobre com quais técnicos de futebol você mais combina.">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="img/favicon-192.png">
+<link rel="shortcut icon" href="img/favicon.ico">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#0b1410">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- INTRO -->
+  <section id="intro" class="screen active">
+    <div class="brand"><img class="logo" src="img/logo.png" alt="Prancheta tática" width="84" height="84"><span>Prancheta <b>12</b></span></div>
+    <div class="badge">⚽ Teste gratuito · sem cadastro</div>
+    <h1>Qual técnico<br>pensa como <span>você</span>?</h1>
+    <p class="lead">Descubra que tipo de técnico você seria, em <b>12 fundamentos táticos</b>, e com quais treinadores, de lendas a nomes da atualidade, você tem mais afinidade.</p>
+    <div class="chips" id="chips"></div>
+    <h3 class="pick">Escolha o tamanho do teste</h3>
+    <div class="modes" id="modes"></div>
+    <button class="btn ghost" id="resume" hidden>Continuar de onde parei</button>
+    <p class="fine">Quanto mais perguntas, mais preciso o perfil. Não há resposta certa. O resultado é uma aproximação lúdica, não uma análise científica.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="screen">
+    <div class="topbar">
+      <button class="link" id="back">← Voltar</button>
+      <span id="count">1 / 24</span>
+    </div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="q-axis" id="qaxis"></div>
+    <h2 id="qtext"></h2>
+    <div class="answers" id="answers"></div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section id="result" class="screen">
+    <div class="rtop">
+      <img class="logo sm" src="img/logo.png" alt="" width="48" height="48">
+      <div><div class="badge">Seu perfil tático</div><h1 id="rlabel"></h1></div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-p="p-match">Técnicos</button>
+      <button class="tab" data-p="p-axes">Meus 12 fundamentos</button>
+    </div>
+    <div id="p-match" class="pane on">
+      <div class="hero" id="hero"></div>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+    <div id="p-axes" class="pane"><div id="axes" class="axgrid"></div></div>
+    <div class="actions">
+      <button class="btn primary" id="share">📤 Compartilhar card</button>
+      <button class="btn" id="copy">Copiar texto</button>
+      <button class="btn ghost" id="redo">Refazer</button>
+    </div>
+    <p class="toast" id="toast" hidden></p>
+  </section>
+
+</div>
+<div id="modal" class="modal" hidden>
+  <div class="mbox">
+    <button class="mclose" id="mclose" aria-label="Fechar">×</button>
+    <img id="cardimg" alt="Seu card de perfil tático">
+    <div class="mact">
+      <button class="btn primary" id="mshare">📤 Compartilhar</button>
+      <button class="btn" id="mdl">⬇ Baixar imagem</button>
+      <button class="btn" id="mcopyimg">📋 Copiar imagem</button>
+      <button class="btn" id="mcopy">Copiar texto</button>
+      <a class="btn" id="mwa" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn" id="mx" target="_blank" rel="noopener">X</a>
+    </div>
+    <p class="toast" id="mtoast" hidden></p>
+  </div>
+</div>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
