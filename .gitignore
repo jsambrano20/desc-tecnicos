@@ -5,3 +5,4 @@ fotos/*
 !fotos/[a-z]*.jpg
 .~lock.*
 *.avif
+organizar_fotos.py

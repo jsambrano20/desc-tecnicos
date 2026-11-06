@@ -212,20 +212,23 @@
   }
   function drawCard(photo) {
     const { sc, label, top } = lastResult, m = top[0];
-    const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+    const W = 1080, H = 1560, M = 96, CW = W - 2 * M;           // M = margem lateral; CW = largura útil
+    const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
     const g = cv.getContext("2d");
     const bg = g.createLinearGradient(0, 0, W, H); bg.addColorStop(0, "#0b1410"); bg.addColorStop(1, "#11301f");
     g.fillStyle = bg; g.fillRect(0, 0, W, H);
     for (let x = 0; x < W; x += 120) { g.fillStyle = "rgba(61,220,132,.04)"; g.fillRect(x, 0, 60, H); }
 
-    g.textAlign = "left"; g.fillStyle = "#3ddc84"; g.font = `700 26px ${FONT}`; g.fillText("⚽  PERFIL DE CAMPO", 60, 78);
-    g.textAlign = "right"; g.fillStyle = "#93ab9e"; g.font = `500 24px ${FONT}`; g.fillText("Qual técnico pensa como você?", W - 60, 78); g.textAlign = "left";
-    g.fillStyle = "#93ab9e"; g.font = `600 24px ${FONT}`; g.fillText("MEU PERFIL TÁTICO", 60, 150);
-    g.fillStyle = "#eaf3ee"; fit(g, label, 800, 82, W - 120); g.fillText(label, 60, 230);
+    // cabeçalho
+    g.textAlign = "left"; g.fillStyle = "#3ddc84"; g.font = `700 26px ${FONT}`; g.fillText("⚽  PERFIL DE CAMPO", M, 112);
+    g.textAlign = "right"; g.fillStyle = "#93ab9e"; g.font = `500 24px ${FONT}`; g.fillText("Qual técnico pensa como você?", W - M, 112); g.textAlign = "left";
+    g.fillStyle = "#93ab9e"; g.font = `600 24px ${FONT}`; g.fillText("MEU PERFIL TÁTICO", M, 200);
+    g.fillStyle = "#eaf3ee"; fit(g, label, 800, 82, CW); g.fillText(label, M, 285);
 
     // painel do técnico #1
-    rr(g, 60, 270, 960, 390, 28); g.fillStyle = "#12211a"; g.fill(); g.lineWidth = 2; g.strokeStyle = "#244033"; g.stroke();
-    const cx = 230, cy = 465, R = 125, hue = hueOf(m.c.n);
+    const PY = 335, PH = 430, PAD = 44;
+    rr(g, M, PY, CW, PH, 28); g.fillStyle = "#12211a"; g.fill(); g.lineWidth = 2; g.strokeStyle = "#244033"; g.stroke();
+    const R = 112, cx = M + PAD + R, cy = PY + PH / 2, hue = hueOf(m.c.n);
     g.save(); g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.clip();
     const ag = g.createLinearGradient(cx - R, cy - R, cx + R, cy + R);
     ag.addColorStop(0, `hsl(${hue},55%,36%)`); ag.addColorStop(1, `hsl(${(hue + 50) % 360},60%,14%)`);
@@ -234,40 +237,46 @@
       const s = Math.max((R * 2) / photo.width, (R * 2) / photo.height), w = photo.width * s, hh = photo.height * s;
       g.drawImage(photo, cx - w / 2, cy - R - (hh - 2 * R) * 0.22, w, hh);
     } else {
-      g.fillStyle = "rgba(255,255,255,.16)"; g.beginPath(); g.arc(cx, cy - 36, 44, 0, Math.PI * 2); g.fill();
-      g.beginPath(); g.moveTo(cx - 110, cy + R); g.quadraticCurveTo(cx - 100, cy + 15, cx, cy + 15); g.quadraticCurveTo(cx + 100, cy + 15, cx + 110, cy + R); g.fill();
-      g.fillStyle = "#fff"; g.textAlign = "center"; g.font = `800 64px ${FONT}`; g.fillText(initials(m.c.n), cx, cy + 40); g.textAlign = "left";
+      g.fillStyle = "rgba(255,255,255,.16)"; g.beginPath(); g.arc(cx, cy - 34, 40, 0, Math.PI * 2); g.fill();
+      g.beginPath(); g.moveTo(cx - 100, cy + R); g.quadraticCurveTo(cx - 90, cy + 14, cx, cy + 14); g.quadraticCurveTo(cx + 90, cy + 14, cx + 100, cy + R); g.fill();
+      g.fillStyle = "#fff"; g.textAlign = "center"; g.font = `800 58px ${FONT}`; g.fillText(initials(m.c.n), cx, cy + 36); g.textAlign = "left";
     }
     g.restore(); g.lineWidth = 6; g.strokeStyle = "#3ddc84"; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
 
-    const tx = 390;
-    g.fillStyle = "#3ddc84"; g.font = `700 22px ${FONT}`; g.fillText("#1 MAIS COMPATÍVEL", tx, 330);
-    g.fillStyle = "#eaf3ee"; fit(g, m.c.n, 800, 56, 600); g.fillText(m.c.n, tx, 395);
-    g.fillStyle = "#93ab9e"; g.font = `500 24px ${FONT}`; g.fillText(m.c.c, tx, 430);
-    g.fillStyle = "#3ddc84"; g.font = `900 104px ${FONT}`; g.fillText(`${m.p}%`, tx, 535);
+    const tx = cx + R + 40, tw = M + CW - PAD - tx;               // coluna de texto do painel
+    g.fillStyle = "#3ddc84"; g.font = `700 22px ${FONT}`; g.fillText("#1 MAIS COMPATÍVEL", tx, PY + 78);
+    g.fillStyle = "#eaf3ee"; fit(g, m.c.n, 800, 52, tw); g.fillText(m.c.n, tx, PY + 140);
+    g.fillStyle = "#93ab9e"; g.font = `500 24px ${FONT}`; g.fillText(m.c.c, tx, PY + 176);
+    g.fillStyle = "#3ddc84"; g.font = `900 100px ${FONT}`; g.fillText(`${m.p}%`, tx, PY + 275);
     const pw = g.measureText(`${m.p}%`).width;
-    g.fillStyle = "#93ab9e"; g.font = `700 26px ${FONT}`; g.fillText("MATCH", tx + pw + 14, 535);
-    g.fillStyle = "#c9dbd0"; g.font = `500 23px ${FONT}`; wrap(g, m.c.d, tx, 580, 590, 31, 3);
+    g.fillStyle = "#93ab9e"; g.font = `700 26px ${FONT}`; g.fillText("MATCH", tx + pw + 14, PY + 275);
+    g.fillStyle = "#c9dbd0"; g.font = `500 23px ${FONT}`; wrap(g, m.c.d, tx, PY + 322, tw, 31, 3);
 
-    // eixos
-    g.fillStyle = "#93ab9e"; g.font = `600 24px ${FONT}`; g.fillText("MEUS 12 FUNDAMENTOS", 60, 715);
+    // 12 fundamentos
+    g.fillStyle = "#93ab9e"; g.font = `600 24px ${FONT}`; g.fillText("MEUS 12 FUNDAMENTOS", M, 850);
+    const GAP = 56, CWd = (CW - GAP) / 2;
     AXES.forEach((ax, i) => {
-      const col = i < 6 ? 0 : 1, row = i % 6, x0 = 60 + col * 510, w = 450, y = 770 + row * 84, r = sc[i], l = 100 - r;
-      const lw = (l / 100) * w, gap = 3;
-      g.font = `600 21px ${FONT}`; g.textAlign = "left"; g.fillStyle = l >= r ? "#eaf3ee" : "#7d968a"; g.fillText(`${ax.left} ${l}%`, x0, y);
-      g.textAlign = "right"; g.fillStyle = r >= l ? "#eaf3ee" : "#7d968a"; g.fillText(`${r}% ${ax.right}`, x0 + w, y);
+      const col = i < 6 ? 0 : 1, row = i % 6, x0 = M + col * (CWd + GAP), y = 915 + row * 88, r = sc[i], l = 100 - r;
+      const tl = `${ax.left} ${l}%`, tr = `${r}% ${ax.right}`;
+      let fs = 21; g.font = `600 ${fs}px ${FONT}`;
+      while (g.measureText(tl).width + g.measureText(tr).width + 20 > CWd && fs > 14) { fs--; g.font = `600 ${fs}px ${FONT}`; }
+      g.textAlign = "left"; g.fillStyle = l >= r ? "#eaf3ee" : "#7d968a"; g.fillText(tl, x0, y);
+      g.textAlign = "right"; g.fillStyle = r >= l ? "#eaf3ee" : "#7d968a"; g.fillText(tr, x0 + CWd, y);
       g.textAlign = "left";
-      g.globalAlpha = l >= r ? 1 : 0.35; g.fillStyle = "#f5c542"; rr(g, x0, y + 14, Math.max(lw - gap, 0), 14, 7); g.fill();
-      g.globalAlpha = r >= l ? 1 : 0.35; g.fillStyle = "#3ddc84"; rr(g, x0 + lw + gap, y + 14, Math.max(w - lw - gap, 0), 14, 7); g.fill();
+      const lw = (l / 100) * CWd, gp = 3;
+      g.globalAlpha = l >= r ? 1 : 0.35; g.fillStyle = "#f5c542"; rr(g, x0, y + 16, Math.max(lw - gp, 0), 14, 7); g.fill();
+      g.globalAlpha = r >= l ? 1 : 0.35; g.fillStyle = "#3ddc84"; rr(g, x0 + lw + gp, y + 16, Math.max(CWd - lw - gp, 0), 14, 7); g.fill();
       g.globalAlpha = 1;
     });
+
+    // rodapé
     g.textAlign = "left"; g.fillStyle = "#93ab9e";
-    const also = "Também combino com: " + top.slice(1, 4).map((t) => `${t.c.n} (${t.p}%)`).join(" · ");
-    fit(g, also, 500, 24, 960); g.fillText(also, 60, 1262);
+    const also = "Também combino com: " + top.slice(1, 3).map((t) => `${t.c.n} (${t.p}%)`).join(" · ");
+    fit(g, also, 500, 24, CW); g.fillText(also, M, 1448);
     const u = appUrl().replace(/^https?:\/\//, "").replace(/\/$/, "");
     g.textAlign = "center";
-    if (u) { g.fillStyle = "#3ddc84"; fit(g, `Faça o teste: ${u}`, 700, 28, 960); g.fillText(`Faça o teste: ${u}`, W / 2, 1303); }
-    g.font = `500 20px ${FONT}`; g.fillStyle = "#587061"; g.fillText("Resultado lúdico, não é análise científica", W / 2, 1335);
+    if (u) { g.fillStyle = "#3ddc84"; fit(g, `Faça o teste: ${u}`, 700, 30, CW); g.fillText(`Faça o teste: ${u}`, W / 2, 1498); }
+    g.font = `500 20px ${FONT}`; g.fillStyle = "#587061"; g.fillText("Resultado lúdico, não é análise científica", W / 2, 1534);
     return cv;
   }
   function loadPhoto(name) {
