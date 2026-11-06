@@ -327,6 +327,7 @@
     // No computador isso não existe: o botão WhatsApp vira o principal (copia a imagem e abre a conversa com o texto).
     canFiles = detectFiles();
     $("mshare").hidden = !canFiles;
+    $("mtext").hidden = !(navigator.share && canFiles);
     $("mhint").hidden = canFiles;
     $("mwa").classList.toggle("primary", !canFiles);
     $("steps").hidden = true;
@@ -367,6 +368,14 @@
   }
   $("mwa").onclick = viaLink;
   $("mx").onclick = viaLink;
+  $("mtext").onclick = async () => {
+    const text = shareText();
+    try { await navigator.share({ text, title: "Perfil de Campo" }); }
+    catch (e) {
+      if (e && e.name === "AbortError") return;
+      try { await navigator.clipboard.writeText(text); mtoast("Texto copiado! Cole na conversa."); } catch (e2) { mtoast("Não foi possível enviar o texto."); }
+    }
+  };
   $("mshare").onclick = async () => {
     const text = shareText();
     // reserva: alguns apps descartam o texto quando recebem imagem; deixa o texto copiado para colar
@@ -374,7 +383,8 @@
     try {
       const file = new File([cardBlob], "meu-perfil-tecnico.png", { type: "image/png" });
       await navigator.share({ files: [file], text, title: "Perfil de Campo" });
-      mtoast("Se o app não trouxer o texto, ele já está copiado: é só colar.");
+      // WhatsApp e outros apps costumam descartar o texto quando recebem imagem: oferece o envio separado
+      showSteps("Se a imagem foi sem o texto (o WhatsApp às vezes não leva os dois), toque em “Enviar só o texto” e escolha a mesma conversa, ou cole: o texto já está copiado.");
     } catch (e) {
       if (e && e.name === "AbortError") return;
       mtoast((await copyImage()) ? "Não deu para abrir o menu: imagem copiada, cole na conversa." : "Não deu para compartilhar. Use “Baixar imagem”.");
