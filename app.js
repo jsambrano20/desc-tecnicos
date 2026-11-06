@@ -290,7 +290,7 @@
   function loadPhoto(name) {
     return new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = `fotos/${slug(name)}.jpg`; });
   }
-  let cardCanvas = null;
+  let cardCanvas = null, cardBlob = null;
   function loadScript(src) {
     return new Promise((res) => { const s = document.createElement("script"); s.src = src; s.onload = () => res(true); s.onerror = () => res(false); document.head.appendChild(s); });
   }
@@ -319,6 +319,8 @@
   $("share").onclick = async () => {
     const cv = await buildCard();
     $("cardimg").src = cv.toDataURL("image/png");
+    cardBlob = await toBlob();
+    $("msgprev").textContent = shareText();
     const txt = encodeURIComponent(shareText());
     $("mwa").href = `https://wa.me/?text=${txt}`;
     $("mx").href = `https://twitter.com/intent/tweet?text=${txt}`;
@@ -354,11 +356,15 @@
   $("mwa").onclick = viaLink;
   $("mx").onclick = viaLink;
   $("mshare").onclick = async () => {
+    const text = shareText();
+    // reserva: alguns apps descartam o texto quando recebem imagem; deixa o texto copiado para colar
+    try { navigator.clipboard && navigator.clipboard.writeText(text).catch(() => {}); } catch (e) {}
     try {
-      const blob = await toBlob();
+      const blob = cardBlob || (await toBlob());
       const file = new File([blob], "meu-perfil-tecnico.png", { type: "image/png" });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], text: shareText() });
+        await navigator.share({ files: [file], text, title: "Prancheta 12" });
+        mtoast("Se o app não trouxer o texto, ele já está copiado: é só colar.");
       } else {
         download(); await copyImage();
         mtoast("Este navegador não envia imagem direto: ela foi baixada e copiada. Anexe ou cole na conversa.");
