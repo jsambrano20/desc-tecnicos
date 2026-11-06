@@ -175,3 +175,20 @@ h3{margin:2em 0 .8em;font-size:1.05rem;text-transform:uppercase;letter-spacing:.
 .topbar{justify-content:flex-end}
 .mhint{font-size:.8rem;color:var(--muted);text-align:left;margin:10px 0 0}
 .mhint[hidden]{display:none}
+
+/* eixos: barra dividida */
+.axgrid{gap:10px 26px;align-content:start}
+.axis2{min-width:0}
+.a2t{display:flex;justify-content:space-between;gap:8px;font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.a2t span{min-width:0}
+.a2t b{font-weight:700;margin:0 2px}
+.a2t .win{color:var(--text);font-weight:600}
+.a2t .win b{color:var(--accent)}
+.a2t span:first-child.win b{color:var(--accent2)}
+.a2bar{display:flex;height:9px;border-radius:9px;overflow:hidden;background:var(--panel2);gap:2px}
+.a2bar i{display:block;opacity:.32;transition:width .4s}
+.a2bar i.L{background:var(--accent2)}
+.a2bar i.R{background:var(--accent)}
+.a2bar i.win{opacity:1}
+.a2bar i.tie{opacity:.7}
+#p-axes.on{padding:2px 2px 8px}

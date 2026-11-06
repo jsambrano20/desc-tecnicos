@@ -173,12 +173,14 @@
   function renderResult() {
     const { sc, label } = lastResult;
     $("rlabel").textContent = label;
+    // barra dividida: lado esquerdo (dourado) x lado direito (verde); o lado dominante fica em destaque
     $("axes").innerHTML = AXES.map((ax, i) => {
-      const p = sc[i];
-      return `<div class="axis">
-        <div class="t"><span>${p < 50 ? "<b>" + ax.left + "</b>" : ax.left}</span><span>${p >= 50 ? "<b>" + ax.right + "</b>" : ax.right}</span></div>
-        <div class="track"><div class="fill" style="left:${Math.min(50, p)}%;width:${Math.abs(p - 50)}%"></div><div class="dot" style="left:${p}%"></div></div>
-        <div class="v">${strength(p)} · ${poleOf(ax, p)} ${poleShare(p)}%</div></div>`;
+      const r = sc[i], l = 100 - r;
+      const cl = l > r ? "win" : l === r ? "tie" : "", cr = r > l ? "win" : l === r ? "tie" : "";
+      return `<div class="axis2">
+        <div class="a2t"><span class="${cl}">${ax.left} <b>${l}%</b></span><span class="${cr}"><b>${r}%</b> ${ax.right}</span></div>
+        <div class="a2bar"><i class="L ${cl}" style="width:${l}%"></i><i class="R ${cr}" style="width:${r}%"></i></div>
+      </div>`;
     }).join("");
     renderHero(); renderThumbs(); setTab("p-match");
   }
@@ -262,13 +264,14 @@
     // eixos
     g.fillStyle = "#93ab9e"; g.font = `600 24px ${FONT}`; g.fillText("MEUS 12 FUNDAMENTOS", 60, 715);
     AXES.forEach((ax, i) => {
-      const col = i < 6 ? 0 : 1, row = i % 6, x0 = 60 + col * 510, w = 450, y = 770 + row * 84, p = sc[i];
-      g.font = `500 21px ${FONT}`; g.textAlign = "left"; g.fillStyle = p < 50 ? "#eaf3ee" : "#6f8578"; g.fillText(ax.left, x0, y);
-      g.textAlign = "right"; g.fillStyle = p >= 50 ? "#eaf3ee" : "#6f8578"; g.fillText(ax.right, x0 + w, y);
-      g.fillStyle = "#182b21"; rr(g, x0, y + 14, w, 12, 6); g.fill();
-      g.fillStyle = "#3ddc84"; g.fillRect(x0 + Math.min(50, p) / 100 * w, y + 14, Math.abs(p - 50) / 100 * w, 12);
-      g.fillStyle = "#f5c542"; g.beginPath(); g.arc(x0 + p / 100 * w, y + 20, 13, 0, Math.PI * 2); g.fill();
-      g.strokeStyle = "#0b1410"; g.lineWidth = 3; g.stroke();
+      const col = i < 6 ? 0 : 1, row = i % 6, x0 = 60 + col * 510, w = 450, y = 770 + row * 84, r = sc[i], l = 100 - r;
+      const lw = (l / 100) * w, gap = 3;
+      g.font = `600 21px ${FONT}`; g.textAlign = "left"; g.fillStyle = l >= r ? "#eaf3ee" : "#7d968a"; g.fillText(`${ax.left} ${l}%`, x0, y);
+      g.textAlign = "right"; g.fillStyle = r >= l ? "#eaf3ee" : "#7d968a"; g.fillText(`${r}% ${ax.right}`, x0 + w, y);
+      g.textAlign = "left";
+      g.globalAlpha = l >= r ? 1 : 0.35; g.fillStyle = "#f5c542"; rr(g, x0, y + 14, Math.max(lw - gap, 0), 14, 7); g.fill();
+      g.globalAlpha = r >= l ? 1 : 0.35; g.fillStyle = "#3ddc84"; rr(g, x0 + lw + gap, y + 14, Math.max(w - lw - gap, 0), 14, 7); g.fill();
+      g.globalAlpha = 1;
     });
     g.textAlign = "left"; g.fillStyle = "#93ab9e";
     const also = "Também combino com: " + top.slice(1, 4).map((t) => `${t.c.n} (${t.p}%)`).join(" · ");
