@@ -325,11 +325,15 @@
     $("mx").href = `https://twitter.com/intent/tweet?text=${txt}`;
     // Onde o navegador consegue enviar arquivo (celulares), "Compartilhar" leva imagem + texto + link.
     // No computador isso não existe: o botão WhatsApp vira o principal (copia a imagem e abre a conversa com o texto).
-    canFiles = detectFiles();
-    $("mshare").hidden = !canFiles;
-    $("mtext").hidden = !(navigator.share && canFiles);
+    // No PC o menu do sistema (Windows) entrega só a imagem ao WhatsApp e perde o texto; lá o botão principal usa o link com texto.
+    const mobile = (navigator.maxTouchPoints > 0 && window.matchMedia("(pointer: coarse)").matches) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    canFiles = detectFiles() && mobile;
+    $("mshare").hidden = false;
+    $("mshare").textContent = canFiles ? "📤 Compartilhar" : "📤 Compartilhar (imagem + texto)";
+    $("mtext").hidden = !canFiles;
     $("mhint").hidden = canFiles;
-    $("mwa").classList.toggle("primary", !canFiles);
+    $("mwa").hidden = false;
+    $("mwa").classList.toggle("primary", false);
     $("steps").hidden = true;
     $("modal").hidden = false; document.body.style.overflow = "hidden";
   };
@@ -376,7 +380,10 @@
       try { await navigator.clipboard.writeText(text); mtoast("Texto copiado! Cole na conversa."); } catch (e2) { mtoast("Não foi possível enviar o texto."); }
     }
   };
-  $("mshare").onclick = async () => {
+  $("mshare").onclick = async (ev) => {
+    if (!canFiles) { // computador: copia imagem + texto e abre o WhatsApp com a mensagem pronta
+      return viaLink({ preventDefault() {}, currentTarget: $("mwa") });
+    }
     const text = shareText();
     // reserva: alguns apps descartam o texto quando recebem imagem; deixa o texto copiado para colar
     try { navigator.clipboard && navigator.clipboard.writeText(text).catch(() => {}); } catch (e) {}
