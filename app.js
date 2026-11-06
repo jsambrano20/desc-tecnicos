@@ -7,19 +7,10 @@
     { v: -1, t: "Discordo" },
     { v: -2, t: "Discordo totalmente" },
   ];
-  const KEY = "12estilos.v1";
   const NQ = QUESTIONS.length;
   let N = NQ;
 
   let order = [], answers = [], idx = 0, lastResult = null;
-
-  // ---- storage seguro ----
-  const store = {
-    get() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } },
-    set(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} },
-    clear() { try { localStorage.removeItem(KEY); } catch (e) {} },
-  };
-  const save = () => store.set({ order, answers, idx });
 
   function show(id) {
     document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
@@ -36,10 +27,6 @@
 
   // ---- intro ----
   $("chips").innerHTML = AXES.map((a) => `<span>${a.name}</span>`).join("");
-  const saved = store.get();
-  if (saved && saved.order && saved.answers && saved.answers.length === NQ && saved.idx < saved.order.length && saved.answers.some((x) => x !== null)) {
-    $("resume").hidden = false;
-  }
   // seleção equilibrada: k perguntas por eixo, metade em cada direção
   function buildOrder(k) {
     const pick = [];
@@ -61,12 +48,8 @@
     order = buildOrder(MODES[b.dataset.m].k);
     N = order.length;
     answers = Array(NQ).fill(null);
-    idx = 0; save(); renderQ(); show("quiz");
+    idx = 0; renderQ(); show("quiz");
   }));
-  $("resume").onclick = () => {
-    order = saved.order; answers = saved.answers; idx = saved.idx; N = order.length;
-    renderQ(); show("quiz");
-  };
 
   // ---- quiz ----
   function renderQ() {
@@ -90,9 +73,9 @@
   function answer(v) {
     answers[order[idx]] = v;
     idx++;
-    if (idx >= N) { store.clear(); finish(); } else { save(); renderQ(); }
+    if (idx >= N) { finish(); } else { renderQ(); }
   }
-  $("back").onclick = () => { if (idx > 0) { idx--; save(); renderQ(); } };
+  $("back").onclick = () => { if (idx > 0) { idx--; renderQ(); } };
 
   // ---- cálculo ----
   function computeScores() {
@@ -212,7 +195,7 @@
     const t = $("toast"); t.textContent = msg; t.hidden = false;
     setTimeout(() => (t.hidden = true), 2500);
   }
-  $("redo").onclick = () => { store.clear(); show("intro"); $("resume").hidden = true; };
+  $("redo").onclick = () => show("intro");
 
   // ---- card compartilhável ----
   const hueOf = (name) => { let h = 0; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h % 360; };
