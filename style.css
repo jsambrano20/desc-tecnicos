@@ -1,18 +1,28 @@
+/* ===== Tema: gramado escuro de estádio ===== */
 :root{
-  --bg:#0b1410; --panel:#12211a; --panel2:#182b21; --line:#244033;
-  --text:#eaf3ee; --muted:#93ab9e; --accent:#3ddc84; --accent2:#f5c542;
-}
-@media (prefers-color-scheme: light){
-  :root{ --bg:#f3f8f5; --panel:#fff; --panel2:#e8f1ec; --line:#cfe0d6; --text:#10231a; --muted:#587061; --accent:#12a150; --accent2:#c28a00; }
+  --bg:#06150d; --panel:rgba(8,28,18,.80); --panel2:rgba(18,50,33,.85); --line:rgba(130,210,160,.22);
+  --text:#eaf5ee; --muted:#9bb8a8; --accent:#3ddc84; --accent2:#f5c542;
+  color-scheme: dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{
-  background:
-    repeating-linear-gradient(90deg, rgba(61,220,132,.035) 0 60px, transparent 60px 120px),
-    var(--bg);
-  color:var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background:var(--bg); color:var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   line-height:1.5; min-height:100vh;
+}
+/* gramado listrado + luz de estádio + vinheta */
+body::before{
+  content:""; position:fixed; inset:0; z-index:-2;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(255,255,255,.10), transparent 60%),
+    radial-gradient(110% 100% at 50% 50%, transparent 35%, rgba(0,0,0,.72) 100%),
+    repeating-linear-gradient(0deg, #0b2d1b 0 70px, #0e3a23 70px 140px);
+}
+/* marcações do campo */
+body::after{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.20;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 680 1050' fill='none' stroke='white' stroke-width='3'><rect x='20' y='20' width='640' height='1010'/><line x1='20' y1='525' x2='660' y2='525'/><circle cx='340' cy='525' r='91.5'/><circle cx='340' cy='525' r='5' fill='white'/><rect x='138.5' y='20' width='403' height='165'/><rect x='248.5' y='20' width='183' height='55'/><path d='M266.9 185A91.5 91.5 0 0 0 413.1 185'/><circle cx='340' cy='130' r='4' fill='white'/><rect x='138.5' y='865' width='403' height='165'/><rect x='248.5' y='975' width='183' height='55'/><path d='M266.9 865A91.5 91.5 0 0 1 413.1 865'/><circle cx='340' cy='920' r='4' fill='white'/></svg>") center / auto 118vh no-repeat;
 }
 .wrap{max-width:720px;margin:0 auto;padding:28px 18px 60px}
 .screen{display:none}.screen.active{display:block}
@@ -152,3 +162,16 @@ h3{margin:2em 0 .8em;font-size:1.05rem;text-transform:uppercase;letter-spacing:.
 .brand b{color:var(--accent)}
 
 .msgprev{white-space:pre-line;text-align:left;font-size:.82rem;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:10px 0 0}
+
+/* vidro sobre o gramado */
+.badge,.chips span,.mode,.ans,.match,.hero,.th,.btn,.tab,.nav,.msgprev{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.mbox{background:#0b2016}
+.brand span{text-shadow:0 2px 14px rgba(0,0,0,.5)}
+/* navegação das perguntas */
+.qnav{display:flex;gap:10px;margin-top:20px}
+.qnav .btn{flex:1;padding:14px}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;border-color:var(--line)}
+.btn.primary:disabled{background:var(--accent);color:#04180d}
+.topbar{justify-content:flex-end}
+.mhint{font-size:.8rem;color:var(--muted);text-align:left;margin:10px 0 0}
+.mhint[hidden]{display:none}

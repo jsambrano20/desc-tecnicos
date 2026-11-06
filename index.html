@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prancheta 12 — Qual técnico pensa como você?</title>
-<meta name="description" content="Teste gratuito que mapeia sua filosofia de jogo em 12 fundamentos táticos e descobre com quais técnicos de futebol você mais combina.">
+<meta name="description" content="Quiz de diversão que mapeia sua filosofia de jogo em 12 fundamentos táticos e descobre com quais técnicos de futebol você mais combina.">
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="img/favicon-192.png">
 <link rel="shortcut icon" href="img/favicon.ico">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<meta name="theme-color" content="#0b1410">
+<meta name="theme-color" content="#06150d">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,25 +18,28 @@
   <!-- INTRO -->
   <section id="intro" class="screen active">
     <div class="brand"><span>Prancheta <b>12</b></span></div>
-    <div class="badge">⚽ Teste gratuito · sem cadastro</div>
+    <div class="badge">⚽ Só para se divertir</div>
     <h1>Qual técnico<br>pensa como <span>você</span>?</h1>
     <p class="lead">Descubra que tipo de técnico você seria, em <b>12 fundamentos táticos</b>, e com quais treinadores, de lendas a nomes da atualidade, você tem mais afinidade.</p>
     <div class="chips" id="chips"></div>
     <h3 class="pick">Escolha o tamanho do teste</h3>
     <div class="modes" id="modes"></div>
-    <p class="fine">Quanto mais perguntas, mais preciso o perfil. Não há resposta certa. O resultado é uma aproximação lúdica, não uma análise científica.</p>
+    <p class="fine">Quanto mais perguntas, mais preciso o perfil. Não há resposta certa: é só diversão, um palpite lúdico sobre o seu jeito de ver o jogo.</p>
   </section>
 
   <!-- QUIZ -->
   <section id="quiz" class="screen">
     <div class="topbar">
-      <button class="link" id="back">← Voltar</button>
       <span id="count">1 / 24</span>
     </div>
     <div class="progress"><div id="bar"></div></div>
     <div class="q-axis" id="qaxis"></div>
     <h2 id="qtext"></h2>
     <div class="answers" id="answers"></div>
+    <div class="qnav">
+      <button class="btn" id="back">← Voltar</button>
+      <button class="btn primary" id="next" disabled>Próxima →</button>
+    </div>
   </section>
 
   <!-- RESULTADO -->
@@ -66,6 +69,7 @@
     <button class="mclose" id="mclose" aria-label="Fechar">×</button>
     <img id="cardimg" alt="Seu card de perfil tático">
     <p class="msgprev" id="msgprev"></p>
+    <p class="mhint" id="mhint" hidden>Neste navegador não dá para anexar a imagem por link. Toque em <b>WhatsApp</b>: a imagem é copiada e a conversa abre com o texto e o link. É só colar a imagem (Ctrl+V).</p>
     <div class="mact">
       <button class="btn primary" id="mshare">📤 Compartilhar</button>
       <button class="btn" id="mdl">⬇ Baixar imagem</button>

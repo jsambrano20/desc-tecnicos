@@ -68,13 +68,22 @@
       b.onclick = () => answer(s.v);
       $("answers").appendChild(b);
     });
-    $("back").style.visibility = idx === 0 ? "hidden" : "visible";
+    updateNav();
+  }
+  function updateNav() {
+    $("back").disabled = idx === 0;
+    $("next").disabled = answers[order[idx]] === null;
+    $("next").textContent = idx === N - 1 ? "Ver resultado ⚽" : "Próxima →";
   }
   function answer(v) {
     answers[order[idx]] = v;
-    idx++;
-    if (idx >= N) { finish(); } else { renderQ(); }
+    document.querySelectorAll("#answers .ans").forEach((b, i) => b.classList.toggle("sel", SCALE[i].v === v));
+    updateNav();
   }
+  $("next").onclick = () => {
+    if (answers[order[idx]] === null) return;
+    if (idx + 1 >= N) finish(); else { idx++; renderQ(); }
+  };
   $("back").onclick = () => { if (idx > 0) { idx--; renderQ(); } };
 
   // ---- cálculo ----
@@ -299,6 +308,13 @@
     const a = document.createElement("a"); a.download = "meu-perfil-tecnico.png"; a.href = cardCanvas.toDataURL("image/png"); a.click();
   }
 
+  let canFiles = false;
+  function detectFiles() {
+    try {
+      const f = new File([cardBlob || new Blob(["x"])], "meu-perfil-tecnico.png", { type: "image/png" });
+      return !!(navigator.share && navigator.canShare && navigator.canShare({ files: [f] }));
+    } catch (e) { return false; }
+  }
   $("share").onclick = async () => {
     const cv = await buildCard();
     $("cardimg").src = cv.toDataURL("image/png");
@@ -307,6 +323,12 @@
     const txt = encodeURIComponent(shareText());
     $("mwa").href = `https://wa.me/?text=${txt}`;
     $("mx").href = `https://twitter.com/intent/tweet?text=${txt}`;
+    // Onde o navegador consegue enviar arquivo (celulares), "Compartilhar" leva imagem + texto + link.
+    // No computador isso não existe: o botão WhatsApp vira o principal (copia a imagem e abre a conversa com o texto).
+    canFiles = detectFiles();
+    $("mshare").hidden = !canFiles;
+    $("mhint").hidden = canFiles;
+    $("mwa").classList.toggle("primary", !canFiles);
     $("modal").hidden = false; document.body.style.overflow = "hidden";
   };
   const closeModal = () => { $("modal").hidden = true; document.body.style.overflow = ""; };
@@ -317,24 +339,29 @@
   $("mcopy").onclick = async () => {
     try { await navigator.clipboard.writeText(shareText()); mtoast("Texto copiado!"); } catch (e) { mtoast("Não foi possível copiar."); }
   };
+  // copia a imagem (e, se o navegador aceitar, o texto junto) para a área de transferência
   async function copyImage() {
     try {
-      const blob = await toBlob();
-      await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      const blob = cardBlob || (await toBlob());
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob, "text/plain": new Blob([shareText()], { type: "text/plain" }) })]);
+      } catch (e) {
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      }
       return true;
     } catch (e) { return false; }
   }
   $("mcopyimg").onclick = async () => {
     mtoast((await copyImage()) ? "Imagem copiada! Cole (Ctrl+V) na conversa." : "Não foi possível copiar. Use “Baixar imagem”.");
   };
-  // WhatsApp/X só recebem texto por link: baixamos e copiamos a imagem para você anexar
-  function viaLink(e) {
+  // WhatsApp/X só recebem o texto pelo link: copiamos a imagem antes de abrir a conversa
+  async function viaLink(e) {
     e.preventDefault();
     const url = e.currentTarget.href;
-    download();
+    const copying = copyImage();          // inicia a cópia antes de a nova aba tomar o foco
     window.open(url, "_blank", "noopener");
-    copyImage();
-    mtoast("Imagem baixada e copiada: anexe ou cole (Ctrl+V) na conversa.");
+    if (await copying) mtoast("Imagem copiada! Cole (Ctrl+V) na conversa; o texto e o link já estão na mensagem.");
+    else { download(); mtoast("Não deu para copiar: a imagem foi baixada. Anexe na conversa."); }
   }
   $("mwa").onclick = viaLink;
   $("mx").onclick = viaLink;
@@ -343,18 +370,12 @@
     // reserva: alguns apps descartam o texto quando recebem imagem; deixa o texto copiado para colar
     try { navigator.clipboard && navigator.clipboard.writeText(text).catch(() => {}); } catch (e) {}
     try {
-      const blob = cardBlob || (await toBlob());
-      const file = new File([blob], "meu-perfil-tecnico.png", { type: "image/png" });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], text, title: "Prancheta 12" });
-        mtoast("Se o app não trouxer o texto, ele já está copiado: é só colar.");
-      } else {
-        download(); await copyImage();
-        mtoast("Este navegador não envia imagem direto: ela foi baixada e copiada. Anexe ou cole na conversa.");
-      }
+      const file = new File([cardBlob], "meu-perfil-tecnico.png", { type: "image/png" });
+      await navigator.share({ files: [file], text, title: "Prancheta 12" });
+      mtoast("Se o app não trouxer o texto, ele já está copiado: é só colar.");
     } catch (e) {
       if (e && e.name === "AbortError") return;
-      download(); mtoast("Imagem baixada. Anexe na conversa.");
+      mtoast((await copyImage()) ? "Não deu para abrir o menu: imagem copiada, cole na conversa." : "Não deu para compartilhar. Use “Baixar imagem”.");
     }
   };
 })();
