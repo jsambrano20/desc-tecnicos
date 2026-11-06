@@ -192,3 +192,7 @@ h3{margin:2em 0 .8em;font-size:1.05rem;text-transform:uppercase;letter-spacing:.
 .a2bar i.win{opacity:1}
 .a2bar i.tie{opacity:.7}
 #p-axes.on{padding:2px 2px 8px}
+
+.steps{margin:10px 0 0;padding:10px 12px;border-radius:10px;font-size:.9rem;text-align:left;font-weight:600;border:1px solid var(--accent);background:rgba(61,220,132,.12);color:var(--text)}
+.steps.warn{border-color:var(--accent2);background:rgba(245,197,66,.12)}
+.steps[hidden]{display:none}

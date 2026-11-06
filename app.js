@@ -332,6 +332,7 @@
     $("mshare").hidden = !canFiles;
     $("mhint").hidden = canFiles;
     $("mwa").classList.toggle("primary", !canFiles);
+    $("steps").hidden = true;
     $("modal").hidden = false; document.body.style.overflow = "hidden";
   };
   const closeModal = () => { $("modal").hidden = true; document.body.style.overflow = ""; };
@@ -358,13 +359,14 @@
     mtoast((await copyImage()) ? "Imagem copiada! Cole (Ctrl+V) na conversa." : "Não foi possível copiar. Use “Baixar imagem”.");
   };
   // WhatsApp/X só recebem o texto pelo link: copiamos a imagem antes de abrir a conversa
+  function showSteps(msg, warn) { const s = $("steps"); s.textContent = msg; s.classList.toggle("warn", !!warn); s.hidden = false; }
   async function viaLink(e) {
     e.preventDefault();
-    const url = e.currentTarget.href;
+    const url = e.currentTarget.href, app = e.currentTarget.id === "mx" ? "no X" : "no WhatsApp";
     const copying = copyImage();          // inicia a cópia antes de a nova aba tomar o foco
     window.open(url, "_blank", "noopener");
-    if (await copying) mtoast("Imagem copiada! Cole (Ctrl+V) na conversa; o texto e o link já estão na mensagem.");
-    else { download(); mtoast("Não deu para copiar: a imagem foi baixada. Anexe na conversa."); }
+    if (await copying) showSteps(`✅ Imagem copiada! Volte para a conversa ${app} e cole com Ctrl+V (no celular: segure e toque em Colar). O texto e o link já estão na mensagem.`);
+    else { download(); showSteps("⚠ O navegador não deixou copiar a imagem, então ela foi baixada. Anexe o arquivo baixado na conversa. (Publicado em https, a cópia funciona.)", true); }
   }
   $("mwa").onclick = viaLink;
   $("mx").onclick = viaLink;
