@@ -198,9 +198,9 @@
   }
   function shareText() {
     const { label, top } = lastResult, u = appUrl();
-    return `Fiz o Perfil de Campo e meu estilo de técnico é "${label}" ⚽\n` +
+    return `Fiz o Perfil de Campo e meu estilo de técnico é "${label}".\n` +
       `Mais compatível com: ${top.slice(0, 3).map((m) => `${m.c.n} (${m.p}%)`).join(", ")}.\n` +
-      `Qual técnico pensa como você? 🧠` + (u ? `\nFaça o teste: ${u}` : "");
+      `Qual técnico pensa como você?` + (u ? `\nFaça o teste: ${u}` : "");
   }
   function toast(msg) {
     const t = $("toast"); t.textContent = msg; t.hidden = false;
