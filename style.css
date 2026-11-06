@@ -77,7 +77,7 @@ h3{margin:2em 0 .8em;font-size:1.05rem;text-transform:uppercase;letter-spacing:.
 .toast{color:var(--accent);font-size:.9rem}
 
 /* ===== Resultado em uma tela só ===== */
-#result.active{display:flex;flex-direction:column;height:calc(100dvh - 40px);min-height:560px}
+#result.active{display:block}
 .wrap{padding:20px 18px}
 .rtop h1{font-size:clamp(1.5rem,5vw,2.2rem);margin:.1em 0 .3em}
 .rtop .badge{margin-bottom:4px}
@@ -130,7 +130,7 @@ h3{margin:2em 0 .8em;font-size:1.05rem;text-transform:uppercase;letter-spacing:.
 .th span{max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .actions{margin-top:10px}
 .actions .btn{padding:9px 14px;font-size:.9rem}
-@media(max-height:700px){.thumbs{display:none}}
+
 
 /* modos */
 .pick{margin:1.6em 0 .7em}
@@ -196,3 +196,24 @@ h3{margin:2em 0 .8em;font-size:1.05rem;text-transform:uppercase;letter-spacing:.
 .steps{margin:10px 0 0;padding:10px 12px;border-radius:10px;font-size:.9rem;text-align:left;font-weight:600;border:1px solid var(--accent);background:rgba(61,220,132,.12);color:var(--text)}
 .steps.warn{border-color:var(--accent2);background:rgba(245,197,66,.12)}
 .steps[hidden]{display:none}
+
+/* resultado: técnico + barras na mesma tela */
+.rgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.rleft,.rright{min-width:0}
+.rleft{display:flex;flex-direction:column;gap:10px}
+.hero{flex:none;overflow:visible}
+.bt{margin:6px 0 10px}
+.axgrid{grid-template-columns:1fr}
+.a2bar{position:relative}
+.a2bar .tick{position:absolute;top:-2px;bottom:-2px;width:3px;margin-left:-1.5px;background:#fff;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.55);transition:left .35s}
+.legend2{font-size:.72rem;color:var(--muted);margin-top:10px}
+.legend2 .tk{display:inline-block;width:3px;height:11px;background:#fff;border-radius:2px;vertical-align:-2px;margin-right:6px;box-shadow:0 0 0 1px rgba(0,0,0,.55)}
+.actions{margin-top:18px}
+@media(max-width:899px){.actions{position:sticky;bottom:0;padding:10px 0;background:linear-gradient(0deg,var(--bg) 60%,transparent)}}
+@media(min-width:900px){
+  body:has(#result.active) .wrap{max-width:1040px}
+  .rgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+}
+
+html,body{overflow-x:hidden}
+.thumbs{max-width:100%}

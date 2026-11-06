@@ -140,55 +140,43 @@
   }
 
   function renderHero() {
-    const m = list[cur], sc = lastResult.sc;
-    const rows = m.c.v.map((v, i) => ({ i, v, d: Math.abs(v - 50) })).sort((a, b) => b.d - a.d).slice(0, 3)
-      .map((r) => {
-        const ax = AXES[r.i];
-        return `<div class="hrow"><div class="ht"><span>${strength(r.v)} · <b>${poleOf(ax, r.v)}</b></span><span>${poleShare(r.v)}%</span></div>
-          <div class="track sm"><div class="fill" style="left:${Math.min(50, r.v)}%;width:${Math.abs(r.v - 50)}%"></div>
-          <div class="dot" style="left:${r.v}%"></div><div class="you" style="left:${sc[r.i]}%"></div></div>
-          <div class="hl"><span>${ax.left}</span><span>${ax.right}</span></div></div>`;
-      }).join("");
+    const m = list[cur];
     $("hero").className = "hero" + (m.opp ? " opp" : "");
     $("hero").innerHTML = `
-      <button class="nav" id="prev" aria-label="Anterior">‹</button>
+      <button class="nav" id="hprev" type="button" aria-label="Anterior">‹</button>
       <div class="hbody">
         <div class="tag">${m.opp ? "NO OUTRO EXTREMO" : "#" + (cur + 1) + " MAIS COMPATÍVEL"}</div>
         <div class="hmain">${avatar(m.c.n, "big")}
           <div class="hid"><div class="hname">${m.c.n}</div><div class="hc">${m.c.c}</div>
           <div class="pct">${m.p}%<small>MATCH</small></div></div></div>
         <p class="hd">${m.c.d}</p>
-        ${rows}
-        <div class="legend"><span><i class="ld g"></i>técnico</span><span><i class="ld y"></i>você</span></div>
       </div>
-      <button class="nav" id="next" aria-label="Próximo">›</button>`;
-    $("prev").onclick = () => { cur = (cur + list.length - 1) % list.length; renderHero(); renderThumbs(); };
-    $("next").onclick = () => { cur = (cur + 1) % list.length; renderHero(); renderThumbs(); };
+      <button class="nav" id="hnext" type="button" aria-label="Próximo">›</button>`;
+    $("hprev").onclick = () => go(-1);
+    $("hnext").onclick = () => go(1);
   }
+  function go(d) { cur = (cur + d + list.length) % list.length; renderHero(); renderThumbs(); renderAxes(); }
   function renderThumbs() {
     $("thumbs").innerHTML = list.map((m, i) => `<button class="th${i === cur ? " on" : ""}${m.opp ? " opp" : ""}" data-i="${i}">${avatar(m.c.n)}<span>${m.c.n.split(" ").slice(-1)[0]}</span><b>${m.p}%</b></button>`).join("");
-    $("thumbs").querySelectorAll(".th").forEach((b) => (b.onclick = () => { cur = +b.dataset.i; renderHero(); renderThumbs(); }));
+    $("thumbs").querySelectorAll(".th").forEach((b) => (b.onclick = () => { cur = +b.dataset.i; renderHero(); renderThumbs(); renderAxes(); }));
   }
 
-  function renderResult() {
-    const { sc, label } = lastResult;
-    $("rlabel").textContent = label;
-    // barra dividida: lado esquerdo (dourado) x lado direito (verde); o lado dominante fica em destaque
+  // barras divididas do usuário (esquerda dourado x direita verde) + marca do técnico selecionado
+  function renderAxes() {
+    const sc = lastResult.sc, cv = list[cur].c.v;
     $("axes").innerHTML = AXES.map((ax, i) => {
-      const r = sc[i], l = 100 - r;
+      const r = sc[i], l = 100 - r, tick = 100 - cv[i];
       const cl = l > r ? "win" : l === r ? "tie" : "", cr = r > l ? "win" : l === r ? "tie" : "";
       return `<div class="axis2">
         <div class="a2t"><span class="${cl}">${ax.left} <b>${l}%</b></span><span class="${cr}"><b>${r}%</b> ${ax.right}</span></div>
-        <div class="a2bar"><i class="L ${cl}" style="width:${l}%"></i><i class="R ${cr}" style="width:${r}%"></i></div>
+        <div class="a2bar"><i class="L ${cl}" style="width:${l}%"></i><i class="R ${cr}" style="width:${r}%"></i><u class="tick" style="left:${tick}%"></u></div>
       </div>`;
     }).join("");
-    renderHero(); renderThumbs(); setTab("p-match");
   }
-  function setTab(id) {
-    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("on", t.dataset.p === id));
-    document.querySelectorAll(".pane").forEach((p) => p.classList.toggle("on", p.id === id));
+  function renderResult() {
+    $("rlabel").textContent = lastResult.label;
+    renderHero(); renderThumbs(); renderAxes();
   }
-  document.querySelectorAll(".tab").forEach((t) => (t.onclick = () => setTab(t.dataset.p)));
 
   // ---- compartilhar ----
   function appUrl() {
